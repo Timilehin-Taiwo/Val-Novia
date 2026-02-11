@@ -146,7 +146,7 @@
             width: 100%;
             max-width: 500px;
             background: #fffafa;
-            padding: 30px;
+            padding: 40px 25px 30px; 
             border-radius: 20px;
             border: 1px solid #ffb6c1;
             display: flex;
@@ -158,21 +158,23 @@
 
         #speed-toggle {
             position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 0.8rem;
+            top: 12px;
+            right: 12px;
+            font-size: 0.75rem;
             color: #ff1493;
-            background: rgba(255, 182, 193, 0.2);
-            padding: 5px 12px;
-            border-radius: 15px;
+            background: rgba(255, 182, 193, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
             cursor: pointer;
             border: 1px solid #ffb6c1;
             font-weight: bold;
+            z-index: 500;
+            white-space: nowrap;
         }
 
         #letter-content {
             font-family: 'Dancing Script', cursive;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: #333;
             line-height: 1.5;
             text-align: left;
@@ -210,27 +212,37 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 60px 20px;
+            padding: 40px 20px;
             overflow-y: auto;
         }
 
         .final-media {
-            width: 85%;
-            max-width: 400px;
+            width: auto;
+            max-width: 90%;
+            /* Specific 1080x1920 aspect ratio (9:16) */
+            aspect-ratio: 9 / 16; 
+            max-height: 70vh; /* Limits height so text stays visible below */
             border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             border: 6px solid white;
-            margin-top: 20px;
+            margin-top: 10px;
             background: black;
+            object-fit: cover; /* Ensures video fills the frame */
         }
 
         .final-text {
             font-family: 'Dancing Script', cursive;
             color: #ff1493;
-            font-size: 2.5rem;
-            margin-top: 20px;
+            font-size: 2.2rem;
+            margin-top: 15px;
             text-shadow: 2px 2px white;
             padding-bottom: 20px;
+        }
+
+        @media (max-width: 380px) {
+            #letter-content { font-size: 1.15rem; }
+            .final-text { font-size: 1.8rem; }
+            .final-media { max-height: 60vh; }
         }
     </style>
 </head>
@@ -373,14 +385,8 @@ Novio`;
             document.getElementById('letter-page').style.display = 'none';
             const finalPage = document.getElementById('final-photo-page');
             const video = document.getElementById('lastVideo');
-            
             finalPage.style.display = 'flex';
-            
-            // Triggering play() here bypasses the browser's "mute-only" autoplay rule
-            // because it is linked to a user click (interaction).
-            video.play().catch(error => {
-                console.log("Audio playback requires one more tap on the screen.");
-            });
+            video.play().catch(error => { console.log("Audio requires interaction"); });
         }
     </script>
 </body>
