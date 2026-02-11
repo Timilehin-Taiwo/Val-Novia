@@ -275,7 +275,7 @@
     </div>
 
     <div id="final-photo-page">
-        <video id="lastVideo" class="final-media" loop playsinline>
+        <video id="lastVideo" class="final-media" loop playsinline preload="auto">
             <source src="couple-video.MP4" type="video/mp4">
         </video>
         <div class="final-text">Forever Yours. ❤️</div>
@@ -310,6 +310,13 @@
         function showVideo() {
             document.getElementById('video-overlay').style.display = 'flex';
             document.getElementById('mainVideo').play();
+            
+            // CRITICAL FIX: Prime the last video here!
+            // Browsers allow this play/pause "handshake" because it's during a real click event.
+            const lastVid = document.getElementById('lastVideo');
+            lastVid.play().then(() => {
+                lastVid.pause(); // We play it for a millisecond then pause it so it's "authorized" for later
+            }).catch(e => console.log("Priming last video..."));
         }
 
         function goBack() {
