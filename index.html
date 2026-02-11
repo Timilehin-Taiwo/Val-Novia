@@ -98,12 +98,10 @@
             border-radius: 20px;
             font-family: 'Dancing Script', cursive;
             font-size: 1.5rem;
-            font-weight: bold;
             z-index: 100;
             pointer-events: none;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
             opacity: 0;
-            white-space: nowrap;
         }
 
         .show-toast {
@@ -128,6 +126,7 @@
         #whine-btn { background: white; color: #ff1493; border: 1px solid #ff1493; }
         #next-btn { background: #ff69b4; color: white; }
 
+        /* LETTER PAGE STYLES */
         .letter-container {
             width: 100%;
             max-width: 500px;
@@ -143,7 +142,6 @@
             position: relative;
         }
 
-        /* Speed Control Styling */
         #speed-toggle {
             position: absolute;
             top: 10px;
@@ -166,22 +164,29 @@
             text-align: left;
             white-space: pre-wrap;
             width: 100%;
-            margin-top: 10px;
         }
 
         #final-love-btn {
+            opacity: 0; /* Hidden initially for fade-in */
             display: none;
-            margin-top: 20px;
+            margin-top: 25px;
             background: #ff1493;
             color: white;
-            animation: fadeInBtn 1.5s ease forwards;
+            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
         }
 
-        @keyframes fadeInBtn {
-            from { opacity: 0; transform: translateY(10px); }
+        /* Fade-in Animation */
+        .fade-in-final {
+            display: block !important;
+            animation: finalFade 1.2s ease forwards;
+        }
+
+        @keyframes finalFade {
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* FINAL SCREEN */
         #final-photo-page {
             display: none;
             position: fixed;
@@ -198,7 +203,7 @@
             width: 85%;
             max-width: 400px;
             border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(255, 20, 147, 0.3);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             border: 6px solid white;
         }
 
@@ -241,7 +246,7 @@
         <div class="letter-container">
             <div id="speed-toggle" onclick="toggleSpeed()">Speed: 1x</div>
             <div id="letter-content"></div>
-            <button id="final-love-btn" class="surprise-btn" onclick="showFinalPhoto()">With Love →</button>
+            <button id="final-love-btn" class="surprise-btn" onclick="showFinalPhoto()">Love Forever →</button>
         </div>
     </div>
 
@@ -257,8 +262,10 @@
         let returnTimeout;
         let typingSpeedMultiplier = 1;
 
+        // No Button Logic
         function moveBtn() {
-            showToast();
+            toast.classList.add('show-toast');
+            setTimeout(() => toast.classList.remove('show-toast'), 800);
             clearTimeout(returnTimeout);
             const maxX = box.clientWidth - noBtn.offsetWidth - 10;
             const maxY = box.clientHeight - noBtn.offsetHeight - 10;
@@ -266,11 +273,6 @@
             noBtn.style.top = Math.max(5, Math.random() * maxY) + 'px';
             noBtn.style.transform = "none";
             returnTimeout = setTimeout(returnHome, 2000);
-        }
-
-        function showToast() {
-            toast.classList.add('show-toast');
-            setTimeout(() => { toast.classList.remove('show-toast'); }, 800);
         }
 
         function returnHome() {
@@ -282,6 +284,7 @@
         noBtn.addEventListener('mouseover', moveBtn);
         noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveBtn(); });
 
+        // Navigation Logic
         function showVideo() {
             document.getElementById('video-overlay').style.display = 'flex';
             document.getElementById('mainVideo').play();
@@ -320,32 +323,26 @@ Novio`;
                 document.getElementById("letter-content").innerHTML += char;
                 i++;
                 
-                // Base delay divided by multiplier
                 let delay = 85 / typingSpeedMultiplier; 
-                
-                // Sentence pauses also scale with speed
-                if (char === '.' || char === ',' || char === '!') {
-                    delay = 450 / typingSpeedMultiplier; 
-                }
+                if (char === '.' || char === ',' || char === '!') delay = 450 / typingSpeedMultiplier; 
                 
                 setTimeout(typeWriter, delay);
             } else {
-                document.getElementById('final-love-btn').style.display = 'block';
-                document.getElementById('speed-toggle').style.display = 'none'; // Hide speed when done
+                // FADE IN BUTTON AFTER "NOVIO"
+                const finalBtn = document.getElementById('final-love-btn');
+                finalBtn.classList.add('fade-in-final');
+                document.getElementById('speed-toggle').style.display = 'none';
             }
         }
 
         function toggleSpeed() {
             const btn = document.getElementById('speed-toggle');
             if (typingSpeedMultiplier === 1) {
-                typingSpeedMultiplier = 1.5;
-                btn.innerHTML = "Speed: 1.5x";
+                typingSpeedMultiplier = 1.5; btn.innerHTML = "Speed: 1.5x";
             } else if (typingSpeedMultiplier === 1.5) {
-                typingSpeedMultiplier = 2;
-                btn.innerHTML = "Speed: 2x";
+                typingSpeedMultiplier = 2; btn.innerHTML = "Speed: 2x";
             } else {
-                typingSpeedMultiplier = 1;
-                btn.innerHTML = "Speed: 1x";
+                typingSpeedMultiplier = 1; btn.innerHTML = "Speed: 1x";
             }
         }
 
