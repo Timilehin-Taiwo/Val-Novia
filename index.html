@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For Novia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
         body {
             background-image: url('my_background.jpg'); 
@@ -14,17 +15,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Changed 'justify-content' to allow scrolling */
             justify-content: flex-start; 
             min-height: 100vh;
             margin: 0;
-            /* Changed 'overflow' to allow vertical scrolling */
             overflow-x: hidden;
             overflow-y: auto; 
             text-align: center;
-            padding: 20px 0; /* Adds space when scrolling */
+            padding: 20px 0;
         }
 
+        /* Standard Card Style */
         .main-card {
             background: rgba(255, 240, 245, 0.9); 
             backdrop-filter: blur(5px);
@@ -34,94 +34,63 @@
             border: 3px solid #ffb6c1;
             width: 90%;
             max-width: 500px;
-            z-index: 1;
-            position: relative;
-            /* Ensures card stays centered even when scrollable */
             margin: auto; 
         }
 
         h1 { color: #ff1493; font-size: 2rem; margin-bottom: 20px; }
 
-        .photo-gallery {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
         .photo-gallery img {
-            width: 30%;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            border-radius: 15px;
-            border: 3px solid #ff69b4;
+            width: 30%; aspect-ratio: 1/1; object-fit: cover;
+            border-radius: 15px; border: 3px solid #ff69b4; margin: 5px;
         }
 
         .button-area {
-            margin-top: 20px;
-            height: 160px; 
-            position: relative;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin-top: 20px; height: 160px; position: relative;
+            width: 100%; display: flex; justify-content: center; align-items: center;
         }
 
-        button {
-            padding: 12px 35px;
-            font-size: 1.1rem;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
+        button, .surprise-btn {
+            padding: 12px 30px; font-size: 1.1rem; border-radius: 50px;
+            border: none; cursor: pointer; font-weight: bold;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        #yes-btn {
-            background: #ff69b4;
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 20, 147, 0.3);
-            transform: translateX(-75px); 
+        #yes-btn { background: #ff69b4; color: white; transform: translateX(-75px); }
+        #no-btn { background-color: #ffffff; color: #ff1493; border: 2px solid #ff69b4; position: absolute; left: calc(50% + 5px); }
+
+        /* Overlays */
+        #video-overlay, #letter-page {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffe4e1; z-index: 9999; flex-direction: column;
+            justify-content: center; align-items: center; padding: 20px;
         }
 
-        #no-btn {
-            background-color: #ffffff;
-            color: #ff1493;
-            border: 2px solid #ff69b4;
-            position: absolute;
-            z-index: 1000;
-            left: calc(50% + 5px); 
-            top: 50%;
-            transform: translateY(-50%);
-        }
+        video { width: 90%; max-height: 50%; border-radius: 20px; margin-bottom: 20px; }
 
-        #video-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffe4e1;
-            z-index: 9999;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+        .overlay-controls { display: flex; gap: 15px; margin-top: 20px; }
+        #whine-btn { background: white; color: #ff1493; border: 1px solid #ff1493; }
+        #next-btn { background: #ff69b4; color: white; }
 
-        video { width: 90%; max-height: 70%; border-radius: 20px; }
+        /* Letter Styling */
+        #letter-content {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.6rem;
+            color: #4a4a4a;
+            line-height: 1.6;
+            text-align: left;
+            max-width: 80%;
+            white-space: pre-wrap; /* Keeps line breaks */
+        }
     </style>
 </head>
 <body>
 
-    <div class="main-card">
+    <div class="main-card" id="proposal-page">
         <h1>Will you be my val, Novia? 🌸</h1>
-        
         <div class="photo-gallery">
-            <img src="photo1.jpg"> 
-            <img src="photo2.jpg"> 
-            <img src="photo3.jpg">
+            <img src="photo1.jpg"> <img src="photo2.jpg"> <img src="photo3.jpg">
         </div>
-
         <div style="font-size: 30px; margin: 10px;">🍰 🎂 🧁</div>
-
         <div class="button-area" id="box">
             <button id="yes-btn" onclick="showVideo()">Yes!</button>
             <button id="no-btn">No</button>
@@ -131,6 +100,16 @@
     <div id="video-overlay">
         <h1 style="color: #ff1493;">I Love You Forever! ❤️</h1>
         <video id="mainVideo" src="myvideo.mp4" playsinline controls></video>
+        <div class="overlay-controls">
+            <button class="surprise-btn" id="whine-btn" onclick="goBack()">← You dey whine?</button>
+            <button class="surprise-btn" id="next-btn" onclick="showLetter()">Next Surprise! 😊 →</button>
+        </div>
+    </div>
+
+    <div id="letter-page" style="background-image: url('my_background.jpg'); background-size: cover;">
+        <div class="main-card" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+            <div id="letter-content"></div>
+        </div>
     </div>
 
     <script>
@@ -138,35 +117,58 @@
         const box = document.getElementById('box');
         let returnTimeout;
 
+        // NO BUTTON LOGIC
         function moveBtn() {
             clearTimeout(returnTimeout);
-            
-            const padding = 20;
-            const maxX = box.clientWidth - noBtn.offsetWidth - padding;
-            const maxY = box.clientHeight - noBtn.offsetHeight - padding;
-            
-            const newX = Math.random() * maxX;
-            const newY = Math.random() * maxY;
-
-            noBtn.style.left = newX + 'px';
-            noBtn.style.top = newY + 'px';
+            const maxX = box.clientWidth - noBtn.offsetWidth - 20;
+            const maxY = box.clientHeight - noBtn.offsetHeight - 20;
+            noBtn.style.left = Math.random() * maxX + 'px';
+            noBtn.style.top = Math.random() * maxY + 'px';
             noBtn.style.transform = "none";
-
-            returnTimeout = setTimeout(returnHome, 2000);
+            returnTimeout = setTimeout(() => {
+                noBtn.style.left = "calc(50% + 5px)";
+                noBtn.style.top = "50%";
+                noBtn.style.transform = "translateY(-50%)";
+            }, 2000);
         }
-
-        function returnHome() {
-            noBtn.style.left = "calc(50% + 5px)";
-            noBtn.style.top = "50%";
-            noBtn.style.transform = "translateY(-50%)";
-        }
-
         noBtn.addEventListener('mouseover', moveBtn);
         noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveBtn(); });
 
+        // NAVIGATION LOGIC
         function showVideo() {
             document.getElementById('video-overlay').style.display = 'flex';
             document.getElementById('mainVideo').play();
+        }
+
+        function goBack() {
+            document.getElementById('video-overlay').style.display = 'none';
+            document.getElementById('mainVideo').pause();
+        }
+
+        const letterText = `Dear Novia,
+
+Cheers to our 8th valentines together and the first as my fiance, I chose to be more creative these past few months to show you just how special you are.
+
+Over these 8 years, I have called you different names, Ebube, Querida, Bambina, Tesoro Mio, Vauva and now Novia but through all of these it was all the same, the Love I have for you remains the same today as it has always been, right now, I just want to show you more and show you I set the bar and it definitely would keep going higher!
+
+To many more valentines days in Love.
+
+Your Lover, 
+Novio`;
+
+        function showLetter() {
+            document.getElementById('video-overlay').style.display = 'none';
+            document.getElementById('letter-page').style.display = 'flex';
+            typeWriter();
+        }
+
+        let i = 0;
+        function typeWriter() {
+            if (i < letterText.length) {
+                document.getElementById("letter-content").innerHTML += letterText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 40); // Speed of "writing"
+            }
         }
     </script>
 </body>
