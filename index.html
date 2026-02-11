@@ -77,8 +77,42 @@
         }
 
         #yes-btn { background: #ff69b4; color: white; transform: translateX(-65px); z-index: 5; }
-        #no-btn { background-color: #ffffff; color: #ff1493; border: 2px solid #ffb6c1; position: absolute; left: calc(50% + 5px); z-index: 10; }
+        
+        #no-btn {
+            background-color: #ffffff;
+            color: #ff1493;
+            border: 2px solid #ffb6c1;
+            position: absolute;
+            left: calc(50% + 5px);
+            z-index: 10;
+        }
 
+        /* The New "Dey Play" Bubble */
+        #dey-play-toast {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255, 20, 147, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 100;
+            pointer-events: none; /* Important: She can click through it! */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+            opacity: 0;
+            white-space: nowrap;
+        }
+
+        .show-toast {
+            transform: translate(-50%, -50%) scale(1.2) !important;
+            opacity: 1 !important;
+        }
+
+        /* Overlays */
         .overlay {
             display: none;
             position: fixed;
@@ -88,25 +122,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-        }
-
-        #video-overlay, #letter-page {
-            background: rgba(255, 228, 225, 0.9);
-            overflow-y: auto;
-        }
-
-        /* Faster Flash Overlay */
-        #flash-overlay {
-            background: rgba(255, 182, 193, 0.6);
-            backdrop-filter: blur(8px);
-            pointer-events: none; /* Allows the mouse to stay focused on the button */
-        }
-
-        #flash-text {
-            font-family: 'Dancing Script', cursive;
-            font-size: 4.5rem;
-            color: white;
-            text-shadow: 2px 2px 15px rgba(255, 20, 147, 0.6);
+            background: rgba(255, 228, 225, 0.95);
         }
 
         video { width: 100%; max-width: 400px; border-radius: 20px; margin-bottom: 20px; }
@@ -123,7 +139,6 @@
             padding: 30px;
             border-radius: 20px;
             border: 1px solid #ffb6c1;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
 
         #letter-content {
@@ -140,6 +155,9 @@
 
     <div class="main-card" id="proposal-page">
         <h1>Will you be my val, Novia? 🌸</h1>
+        
+        <div id="dey-play-toast">Dey Play! 😂</div>
+
         <div class="photo-gallery">
             <img src="photo1.jpg"> 
             <img src="photo2.jpg"> 
@@ -150,10 +168,6 @@
             <button id="yes-btn" onclick="showVideo()">Yes!</button>
             <button id="no-btn">No</button>
         </div>
-    </div>
-
-    <div id="flash-overlay" class="overlay">
-        <div id="flash-text">Dey Play! 😂</div>
     </div>
 
     <div id="video-overlay" class="overlay">
@@ -174,16 +188,17 @@
     <script>
         const noBtn = document.getElementById('no-btn');
         const box = document.getElementById('box');
-        const flashOverlay = document.getElementById('flash-overlay');
+        const toast = document.getElementById('dey-play-toast');
         let returnTimeout;
 
         function moveBtn() {
-            // Trigger flash on EVERY attempt
-            triggerFlash();
+            // Show the hilarious toast
+            showToast();
 
             clearTimeout(returnTimeout);
             const maxX = box.clientWidth - noBtn.offsetWidth - 10;
             const maxY = box.clientHeight - noBtn.offsetHeight - 10;
+            
             noBtn.style.left = Math.max(5, Math.random() * maxX) + 'px';
             noBtn.style.top = Math.max(5, Math.random() * maxY) + 'px';
             noBtn.style.transform = "none";
@@ -191,13 +206,11 @@
             returnTimeout = setTimeout(returnHome, 2000);
         }
 
-        function triggerFlash() {
-            flashOverlay.style.display = 'flex';
-            
-            // Very quick flash for every hover
+        function showToast() {
+            toast.classList.add('show-toast');
             setTimeout(() => {
-                flashOverlay.style.display = 'none';
-            }, 600);
+                toast.classList.remove('show-toast');
+            }, 800); // Bubble disappears after 0.8s
         }
 
         function returnHome() {
@@ -223,11 +236,13 @@
 
 Cheers to our 8th valentines together and the first as my fiance, I chose to be more creative these past few months to show you just how special you are.
 
-Over these 8 years, I have called you different names, Ebube, Querida, Bambina, Tesoro Mio, Vauva and now Novia but through all of these it was all the same, the Love I have for you remains the same today as it has always been.
+Over these 8 years, I have called you different names, Ebube, Querida, Bambina, Tesoro Mio, Vauva and now Novia but through all of these it was all the same. 
+
+The Love I have for you remains the same today as it has always been.
 
 Right now, I just want to show you more and more of how endless my love for you is and to show you that I set the bar and it definitely would keep going higher!
 
-Cheers to many more valentines days in Love.
+To many more valentines days in Love.
 
 Your Fiance, 
 Novio`;
@@ -252,4 +267,3 @@ Novio`;
     </script>
 </body>
 </html>
-
