@@ -33,14 +33,13 @@
             box-shadow: 0 15px 35px rgba(255, 105, 180, 0.3);
             border: 2px solid #ffb6c1;
             width: 100%;
-            max-width: 450px; /* Optimal for mobile and laptop */
+            max-width: 450px;
             position: relative;
             margin: auto;
         }
 
         h1 { color: #ff1493; font-size: 1.8rem; margin-top: 0; }
 
-        /* Fixed Horizontal Photo Gallery */
         .photo-gallery {
             display: flex;
             justify-content: space-between;
@@ -50,7 +49,7 @@
         }
 
         .photo-gallery img {
-            width: 31%; /* Precisely fits 3 images horizontally */
+            width: 31%;
             aspect-ratio: 1/1;
             object-fit: cover;
             border-radius: 12px;
@@ -87,13 +86,12 @@
         #no-btn {
             background-color: #ffffff;
             color: #ff1493;
-            border: 2px solid #ff69b4;
+            border: 2px solid #ffb6c1;
             position: absolute;
             left: calc(50% + 5px);
             z-index: 10;
         }
 
-        /* Overlays */
         #video-overlay, #letter-page {
             display: none;
             position: fixed;
@@ -113,7 +111,6 @@
         #whine-btn { background: white; color: #ff1493; border: 1px solid #ff1493; }
         #next-btn { background: #ff69b4; color: white; }
 
-        /* Legible Letter Styling */
         .letter-container {
             width: 100%;
             max-width: 500px;
@@ -153,7 +150,7 @@
     </div>
 
     <div id="video-overlay">
-        <h1 style="color: #ff1493; font-size: 1.5rem;">I Love You Forever! ❤️</h1>
+        <h1 style="color: #ff1493; font-size: 1.5rem;">Wow!! She said Yes!! Again!! ❤️</h1>
         <video id="mainVideo" src="myvideo.mp4" playsinline controls></video>
         <div class="overlay-controls">
             <button class="surprise-btn" id="whine-btn" onclick="goBack()">← You dey whine?</button>
@@ -205,12 +202,14 @@
 
 Cheers to our 8th valentines together and the first as my fiance, I chose to be more creative these past few months to show you just how special you are.
 
-Over these 8 years, I have called you different names, Ebube, Querida, Bambina, Tesoro Mio, Vauva and now Novia but through all of these it was all the same, the Love I have for you remains the same today as it has always been, right now, I just want to show you more and show you I set the bar and it definitely would keep going higher!
+Over these 8 years, I have called you different names, Ebube, Querida, Bambina, Tesoro Mio, Vauva and now Novia but through all of these it was all the same, the Love I have for you remains the same today as it has always been.
+
+Right now, I just want to show you more and more of how endless my love for you is and I want to show you that I set the bar and it definitely would keep going higher!
 
 To many more valentines days in Love.
 
 Your Lover, 
-Novi`;
+Novio`;
 
         function showLetter() {
             document.getElementById('video-overlay').style.display = 'none';
