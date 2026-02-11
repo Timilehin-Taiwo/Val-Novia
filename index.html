@@ -25,6 +25,23 @@
             padding: 20px;
         }
 
+        /* Home Icon Styling */
+        .home-icon {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 20000; /* Above everything */
+            background: rgba(255, 255, 255, 0.7);
+            padding: 8px;
+            border-radius: 50%;
+            line-height: 1;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+        }
+        .home-icon:hover { transform: scale(1.2); }
+
         .main-card {
             background: rgba(255, 240, 245, 0.95); 
             backdrop-filter: blur(8px);
@@ -126,7 +143,6 @@
         #whine-btn { background: white; color: #ff1493; border: 1px solid #ff1493; }
         #next-btn { background: #ff69b4; color: white; }
 
-        /* LETTER PAGE STYLES */
         .letter-container {
             width: 100%;
             max-width: 500px;
@@ -167,7 +183,7 @@
         }
 
         #final-love-btn {
-            opacity: 0; /* Hidden initially for fade-in */
+            opacity: 0;
             display: none;
             margin-top: 25px;
             background: #ff1493;
@@ -175,7 +191,6 @@
             box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
         }
 
-        /* Fade-in Animation */
         .fade-in-final {
             display: block !important;
             animation: finalFade 1.2s ease forwards;
@@ -186,7 +201,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* FINAL SCREEN */
         #final-photo-page {
             display: none;
             position: fixed;
@@ -217,6 +231,8 @@
     </style>
 </head>
 <body>
+
+    <a href="#" class="home-icon" onclick="resetAll()">🏠</a>
 
     <div class="main-card" id="proposal-page">
         <h1>Will you be my val, Novia? 🌸</h1>
@@ -261,6 +277,12 @@
         const toast = document.getElementById('dey-play-toast');
         let returnTimeout;
         let typingSpeedMultiplier = 1;
+        let isTyping = false;
+
+        // Reset/Home Function
+        function resetAll() {
+            location.reload(); 
+        }
 
         // No Button Logic
         function moveBtn() {
@@ -284,7 +306,7 @@
         noBtn.addEventListener('mouseover', moveBtn);
         noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveBtn(); });
 
-        // Navigation Logic
+        // Navigation
         function showVideo() {
             document.getElementById('video-overlay').style.display = 'flex';
             document.getElementById('mainVideo').play();
@@ -313,7 +335,10 @@ Novio`;
         function showLetter() {
             document.getElementById('video-overlay').style.display = 'none';
             document.getElementById('letter-page').style.display = 'flex';
-            typeWriter();
+            if (!isTyping) {
+                isTyping = true;
+                typeWriter();
+            }
         }
 
         let i = 0;
@@ -322,13 +347,10 @@ Novio`;
                 let char = letterText.charAt(i);
                 document.getElementById("letter-content").innerHTML += char;
                 i++;
-                
                 let delay = 85 / typingSpeedMultiplier; 
                 if (char === '.' || char === ',' || char === '!') delay = 450 / typingSpeedMultiplier; 
-                
                 setTimeout(typeWriter, delay);
             } else {
-                // FADE IN BUTTON AFTER "NOVIO"
                 const finalBtn = document.getElementById('final-love-btn');
                 finalBtn.classList.add('fade-in-final');
                 document.getElementById('speed-toggle').style.display = 'none';
