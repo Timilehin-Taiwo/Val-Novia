@@ -203,6 +203,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* UPDATED: Scrollable Final Page */
         #final-photo-page {
             display: none;
             position: fixed;
@@ -213,8 +214,9 @@
             background-position: center;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
+            justify-content: flex-start; /* Changed to flex-start for scrolling */
+            padding: 40px 20px;
+            overflow-y: auto; /* Enable scrolling */
         }
 
         .final-media {
@@ -226,6 +228,7 @@
             border: 6px solid white;
             background: black;
             object-fit: cover;
+            flex-shrink: 0;
         }
 
         .final-text {
@@ -234,6 +237,7 @@
             font-size: 2.2rem;
             margin-top: 15px;
             text-shadow: 2px 2px white;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -279,7 +283,7 @@
             <source src="couple-video.MP4" type="video/mp4">
         </video>
         <div class="final-text">Forever Yours. ❤️</div>
-        <button class="surprise-btn" onclick="replayVideo()" style="background: white; color: #ff1493; border: 1px solid #ff1493; margin-top: 10px;">Replay ↺</button>
+        <button class="surprise-btn" onclick="replayVideo()" style="background: white; color: #ff1493; border: 1px solid #ff1493; margin-top: 10px; flex-shrink: 0; margin-bottom: 20px;">Replay ↺</button>
     </div>
 
     <script>
@@ -347,7 +351,12 @@ Novio`;
                 document.getElementById("letter-content").innerHTML += char;
                 i++;
                 scrollBox.scrollTop = scrollBox.scrollHeight;
-                if (i > letterText.length * 0.85) document.getElementById('skip-btn').style.display = 'block';
+                
+                // FIXED: Show skip button after 20% of text
+                if (i > letterText.length * 0.20) {
+                    document.getElementById('skip-btn').style.display = 'block';
+                }
+                
                 let delay = 85 / typingSpeedMultiplier; 
                 if (char === '.' || char === ',' || char === '!') delay = 450 / typingSpeedMultiplier; 
                 typingTimer = setTimeout(typeWriter, delay);
@@ -378,14 +387,8 @@ Novio`;
             document.getElementById('letter-page').style.display = 'none';
             const finalPage = document.getElementById('final-photo-page');
             const video = document.getElementById('lastVideo');
-            
             finalPage.style.display = 'flex';
-            
-            // This click event provides the necessary "User Consent" 
-            // to allow the video and its audio to play immediately.
-            video.play().catch(e => {
-                console.log("Play triggered via consent click.");
-            });
+            video.play().catch(e => console.log("Consent playback triggered."));
         }
 
         function replayVideo() {
