@@ -214,13 +214,14 @@
             overflow-y: auto;
         }
 
-        #couple-img {
+        .final-media {
             width: 85%;
             max-width: 400px;
             border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             border: 6px solid white;
             margin-top: 20px;
+            background: black;
         }
 
         .final-text {
@@ -270,7 +271,10 @@
     </div>
 
     <div id="final-photo-page">
-        <img src="couple.jpg" id="couple-img" alt="Forever Yours">
+        <video id="lastVideo" class="final-media" loop playsinline>
+            <source src="couple-video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
         <div class="final-text">Forever Yours. ❤️</div>
     </div>
 
@@ -357,7 +361,6 @@ Novio`;
 
         function toggleSpeed() {
             const btn = document.getElementById('speed-toggle');
-            // Cycles through 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, then back to 1
             if (typingSpeedMultiplier < 5) {
                 typingSpeedMultiplier += 0.5;
             } else {
@@ -368,7 +371,16 @@ Novio`;
 
         function showFinalPhoto() {
             document.getElementById('letter-page').style.display = 'none';
-            document.getElementById('final-photo-page').style.display = 'flex';
+            const finalPage = document.getElementById('final-photo-page');
+            const video = document.getElementById('lastVideo');
+            
+            finalPage.style.display = 'flex';
+            
+            // Triggering play() here bypasses the browser's "mute-only" autoplay rule
+            // because it is linked to a user click (interaction).
+            video.play().catch(error => {
+                console.log("Audio playback requires one more tap on the screen.");
+            });
         }
     </script>
 </body>
