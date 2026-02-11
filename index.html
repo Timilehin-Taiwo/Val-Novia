@@ -6,8 +6,11 @@
     <title>For Novia</title>
     <style>
         body {
-            background-color: #fff0f5;
-            background-image: url('https://www.transparenttextures.com/patterns/floral-paper.png');
+            /* This is the separate background image */
+            background-image: url('my_background.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             font-family: 'Arial', sans-serif;
             display: flex;
             flex-direction: column;
@@ -20,17 +23,18 @@
         }
 
         .main-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
             padding: 30px;
             border-radius: 40px;
-            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             border: 3px solid #ffb6c1;
             width: 90%;
             max-width: 500px;
             z-index: 1;
         }
 
-        h1 { color: #ff1493; font-size: 2rem; }
+        h1 { color: #ff1493; font-size: 2rem; margin-bottom: 20px; }
 
         .photo-gallery {
             display: flex;
@@ -45,14 +49,13 @@
             object-fit: cover;
             border-radius: 15px;
             border: 3px solid #ff69b4;
-            background: #eee; /* Light gray box while loading */
         }
 
         .button-container {
             margin-top: 20px;
-            height: 80px;
+            height: 60px;
             display: flex;
-            justify-content: center; /* Centers buttons horizontally */
+            justify-content: center; 
             align-items: center;
             gap: 20px;
             position: relative;
@@ -65,14 +68,13 @@
             border: none;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s ease-in-out; /* Smooth return transition */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         #yes-btn {
             background: #ff69b4;
             color: white;
             box-shadow: 0 5px 15px rgba(255, 20, 147, 0.3);
-            z-index: 2;
         }
 
         #no-btn {
@@ -85,10 +87,7 @@
         #video-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: #ffe4e1;
             z-index: 9999;
             flex-direction: column;
@@ -96,18 +95,18 @@
             align-items: center;
         }
 
-        video { width: 90%; max-height: 70%; border-radius: 20px; }
+        video { width: 90%; max-height: 70%; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
 
-    <div class="main-card" id="proposal-card">
+    <div class="main-card">
         <h1>Will you be my val, Novia? 🌸</h1>
         
         <div class="photo-gallery">
-            <img src="photo1.jpg" onerror="console.error('Failed to load photo1.jpg')"> 
-            <img src="photo2.jpg" onerror="console.error('Failed to load photo2.jpg')"> 
-            <img src="photo3.jpg" onerror="console.error('Failed to load photo3.jpg')">
+            <img src="photo1.jpg"> 
+            <img src="photo2.jpg"> 
+            <img src="photo3.jpg">
         </div>
 
         <div style="font-size: 30px; margin: 10px;">🍰 🎂 🧁</div>
@@ -128,7 +127,7 @@
         let returnTimeout;
 
         function moveBtn() {
-            clearTimeout(returnTimeout); // Stop the return timer while she's chasing it
+            clearTimeout(returnTimeout);
             
             const maxX = window.innerWidth - noBtn.offsetWidth - 20;
             const maxY = window.innerHeight - noBtn.offsetHeight - 20;
@@ -140,14 +139,14 @@
             noBtn.style.left = newX + 'px';
             noBtn.style.top = newY + 'px';
 
-            // Set timer to return after 2 seconds of inactivity
-            returnTimeout = setTimeout(returnToOriginal, 2000);
+            // Return to home position after 2 seconds
+            returnTimeout = setTimeout(returnHome, 2000);
         }
 
-        function returnToOriginal() {
-            noBtn.style.position = 'relative';
-            noBtn.style.left = '0';
-            noBtn.style.top = '0';
+        function returnHome() {
+            noBtn.style.position = 'static';
+            noBtn.style.left = 'auto';
+            noBtn.style.top = 'auto';
         }
 
         noBtn.addEventListener('mouseover', moveBtn);
