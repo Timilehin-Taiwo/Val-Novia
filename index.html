@@ -87,7 +87,6 @@
             z-index: 10;
         }
 
-        /* The New "Dey Play" Bubble */
         #dey-play-toast {
             position: absolute;
             top: 50%;
@@ -101,7 +100,7 @@
             font-size: 1.5rem;
             font-weight: bold;
             z-index: 100;
-            pointer-events: none; /* Important: She can click through it! */
+            pointer-events: none;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
             opacity: 0;
             white-space: nowrap;
@@ -112,7 +111,6 @@
             opacity: 1 !important;
         }
 
-        /* Overlays */
         .overlay {
             display: none;
             position: fixed;
@@ -139,6 +137,9 @@
             padding: 30px;
             border-radius: 20px;
             border: 1px solid #ffb6c1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         #letter-content {
@@ -148,6 +149,50 @@
             line-height: 1.5;
             text-align: left;
             white-space: pre-wrap;
+            width: 100%;
+        }
+
+        #final-love-btn {
+            display: none;
+            margin-top: 20px;
+            background: #ff1493;
+            color: white;
+            animation: fadeInBtn 1.5s ease forwards;
+        }
+
+        @keyframes fadeInBtn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Final Screen */
+        #final-photo-page {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10000;
+            background: #fffafa;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-image: url('my_background.jpg');
+            background-size: cover;
+        }
+
+        #couple-img {
+            width: 85%;
+            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(255, 20, 147, 0.3);
+            border: 6px solid white;
+        }
+
+        .final-text {
+            font-family: 'Dancing Script', cursive;
+            color: #ff1493;
+            font-size: 2.5rem;
+            margin-top: 20px;
+            text-shadow: 2px 2px white;
         }
     </style>
 </head>
@@ -155,9 +200,7 @@
 
     <div class="main-card" id="proposal-page">
         <h1>Will you be my val, Novia? 🌸</h1>
-        
         <div id="dey-play-toast">Dey Play! 😂</div>
-
         <div class="photo-gallery">
             <img src="photo1.jpg"> 
             <img src="photo2.jpg"> 
@@ -182,7 +225,13 @@
     <div id="letter-page" class="overlay">
         <div class="letter-container">
             <div id="letter-content"></div>
+            <button id="final-love-btn" class="surprise-btn" onclick="showFinalPhoto()">With Love →</button>
         </div>
+    </div>
+
+    <div id="final-photo-page">
+        <img src="couple.jpg" id="couple-img" alt="Forever Yours">
+        <div class="final-text">Forever Yours. ❤️</div>
     </div>
 
     <script>
@@ -192,25 +241,19 @@
         let returnTimeout;
 
         function moveBtn() {
-            // Show the hilarious toast
             showToast();
-
             clearTimeout(returnTimeout);
             const maxX = box.clientWidth - noBtn.offsetWidth - 10;
             const maxY = box.clientHeight - noBtn.offsetHeight - 10;
-            
             noBtn.style.left = Math.max(5, Math.random() * maxX) + 'px';
             noBtn.style.top = Math.max(5, Math.random() * maxY) + 'px';
             noBtn.style.transform = "none";
-            
             returnTimeout = setTimeout(returnHome, 2000);
         }
 
         function showToast() {
             toast.classList.add('show-toast');
-            setTimeout(() => {
-                toast.classList.remove('show-toast');
-            }, 800); // Bubble disappears after 0.8s
+            setTimeout(() => { toast.classList.remove('show-toast'); }, 800);
         }
 
         function returnHome() {
@@ -262,7 +305,15 @@ Novio`;
                 let delay = 85; 
                 if (char === '.' || char === ',' || char === '!') delay = 450; 
                 setTimeout(typeWriter, delay);
+            } else {
+                // Show final button after typing finishes
+                document.getElementById('final-love-btn').style.display = 'block';
             }
+        }
+
+        function showFinalPhoto() {
+            document.getElementById('letter-page').style.display = 'none';
+            document.getElementById('final-photo-page').style.display = 'flex';
         }
     </script>
 </body>
