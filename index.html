@@ -76,37 +76,40 @@
             transition: all 0.3s ease;
         }
 
-        #yes-btn {
-            background: #ff69b4;
-            color: white;
-            transform: translateX(-65px);
-            z-index: 5;
-        }
+        #yes-btn { background: #ff69b4; color: white; transform: translateX(-65px); z-index: 5; }
+        #no-btn { background-color: #ffffff; color: #ff1493; border: 2px solid #ffb6c1; position: absolute; left: calc(50% + 5px); z-index: 10; }
 
-        #no-btn {
-            background-color: #ffffff;
-            color: #ff1493;
-            border: 2px solid #ffb6c1;
-            position: absolute;
-            left: calc(50% + 5px);
-            z-index: 10;
-        }
-
-        #video-overlay, #letter-page {
+        .overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 228, 225, 0.9);
             z-index: 9999;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
+        }
+
+        #video-overlay, #letter-page {
+            background: rgba(255, 228, 225, 0.9);
             overflow-y: auto;
         }
 
-        video { width: 100%; max-width: 400px; border-radius: 20px; margin-bottom: 20px; }
+        /* Faster Flash Overlay */
+        #flash-overlay {
+            background: rgba(255, 182, 193, 0.6);
+            backdrop-filter: blur(8px);
+            pointer-events: none; /* Allows the mouse to stay focused on the button */
+        }
 
+        #flash-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.5rem;
+            color: white;
+            text-shadow: 2px 2px 15px rgba(255, 20, 147, 0.6);
+        }
+
+        video { width: 100%; max-width: 400px; border-radius: 20px; margin-bottom: 20px; }
         .overlay-controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         #whine-btn { background: white; color: #ff1493; border: 1px solid #ff1493; }
         #next-btn { background: #ff69b4; color: white; }
@@ -149,7 +152,11 @@
         </div>
     </div>
 
-    <div id="video-overlay">
+    <div id="flash-overlay" class="overlay">
+        <div id="flash-text">Dey Play! 😂</div>
+    </div>
+
+    <div id="video-overlay" class="overlay">
         <h1 style="color: #ff1493; font-size: 1.5rem;">Wow!! She said Yes!! Again!! ❤️</h1>
         <video id="mainVideo" src="myvideo.mp4" playsinline controls></video>
         <div class="overlay-controls">
@@ -158,7 +165,7 @@
         </div>
     </div>
 
-    <div id="letter-page">
+    <div id="letter-page" class="overlay">
         <div class="letter-container">
             <div id="letter-content"></div>
         </div>
@@ -167,16 +174,30 @@
     <script>
         const noBtn = document.getElementById('no-btn');
         const box = document.getElementById('box');
+        const flashOverlay = document.getElementById('flash-overlay');
         let returnTimeout;
 
         function moveBtn() {
+            // Trigger flash on EVERY attempt
+            triggerFlash();
+
             clearTimeout(returnTimeout);
             const maxX = box.clientWidth - noBtn.offsetWidth - 10;
             const maxY = box.clientHeight - noBtn.offsetHeight - 10;
             noBtn.style.left = Math.max(5, Math.random() * maxX) + 'px';
             noBtn.style.top = Math.max(5, Math.random() * maxY) + 'px';
             noBtn.style.transform = "none";
+            
             returnTimeout = setTimeout(returnHome, 2000);
+        }
+
+        function triggerFlash() {
+            flashOverlay.style.display = 'flex';
+            
+            // Very quick flash for every hover
+            setTimeout(() => {
+                flashOverlay.style.display = 'none';
+            }, 600);
         }
 
         function returnHome() {
@@ -204,9 +225,9 @@ Cheers to our 8th valentines together and the first as my fiance, I chose to be 
 
 Over these 8 years, I have called you different names, Ebube, Querida, Bambina, Tesoro Mio, Vauva and now Novia but through all of these it was all the same, the Love I have for you remains the same today as it has always been.
 
-Right now, I just want to show you more and more of how endless my love for you is and I want to show you that I set the bar and it definitely would keep going higher!
+Right now, I just want to show you more and more of how endless my love for you is and to show you that I set the bar and it definitely would keep going higher!
 
-To many more valentines days in Love.
+Cheers to many more valentines days in Love.
 
 Your Lover, 
 Novio`;
@@ -220,9 +241,12 @@ Novio`;
         let i = 0;
         function typeWriter() {
             if (i < letterText.length) {
-                document.getElementById("letter-content").innerHTML += letterText.charAt(i);
+                let char = letterText.charAt(i);
+                document.getElementById("letter-content").innerHTML += char;
                 i++;
-                setTimeout(typeWriter, 50);
+                let delay = 85; 
+                if (char === '.' || char === ',' || char === '!') delay = 450; 
+                setTimeout(typeWriter, delay);
             }
         }
     </script>
