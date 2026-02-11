@@ -25,14 +25,13 @@
             padding: 20px;
         }
 
-        /* Home Icon Styling */
         .home-icon {
             position: fixed;
             top: 20px;
             left: 20px;
             font-size: 1.8rem;
             cursor: pointer;
-            z-index: 20000; /* Above everything */
+            z-index: 20000;
             background: rgba(255, 255, 255, 0.7);
             padding: 8px;
             border-radius: 50%;
@@ -94,7 +93,6 @@
         }
 
         #yes-btn { background: #ff69b4; color: white; transform: translateX(-65px); z-index: 5; }
-        
         #no-btn {
             background-color: #ffffff;
             color: #ff1493;
@@ -136,6 +134,7 @@
             align-items: center;
             padding: 20px;
             background: rgba(255, 228, 225, 0.95);
+            overflow-y: auto;
         }
 
         video { width: 100%; max-width: 400px; border-radius: 20px; margin-bottom: 20px; }
@@ -146,8 +145,6 @@
         .letter-container {
             width: 100%;
             max-width: 500px;
-            max-height: 85vh;
-            overflow-y: auto;
             background: #fffafa;
             padding: 30px;
             border-radius: 20px;
@@ -156,6 +153,7 @@
             flex-direction: column;
             align-items: center;
             position: relative;
+            margin: auto;
         }
 
         #speed-toggle {
@@ -208,9 +206,12 @@
             z-index: 10000;
             background-image: url('my_background.jpg');
             background-size: cover;
+            background-position: center;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: flex-start;
+            padding: 60px 20px;
+            overflow-y: auto;
         }
 
         #couple-img {
@@ -219,6 +220,7 @@
             border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             border: 6px solid white;
+            margin-top: 20px;
         }
 
         .final-text {
@@ -227,6 +229,7 @@
             font-size: 2.5rem;
             margin-top: 20px;
             text-shadow: 2px 2px white;
+            padding-bottom: 20px;
         }
     </style>
 </head>
@@ -279,12 +282,8 @@
         let typingSpeedMultiplier = 1;
         let isTyping = false;
 
-        // Reset/Home Function
-        function resetAll() {
-            location.reload(); 
-        }
+        function resetAll() { location.reload(); }
 
-        // No Button Logic
         function moveBtn() {
             toast.classList.add('show-toast');
             setTimeout(() => toast.classList.remove('show-toast'), 800);
@@ -306,7 +305,6 @@
         noBtn.addEventListener('mouseover', moveBtn);
         noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveBtn(); });
 
-        // Navigation
         function showVideo() {
             document.getElementById('video-overlay').style.display = 'flex';
             document.getElementById('mainVideo').play();
@@ -359,13 +357,13 @@ Novio`;
 
         function toggleSpeed() {
             const btn = document.getElementById('speed-toggle');
-            if (typingSpeedMultiplier === 1) {
-                typingSpeedMultiplier = 1.5; btn.innerHTML = "Speed: 1.5x";
-            } else if (typingSpeedMultiplier === 1.5) {
-                typingSpeedMultiplier = 2; btn.innerHTML = "Speed: 2x";
+            // Cycles through 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, then back to 1
+            if (typingSpeedMultiplier < 5) {
+                typingSpeedMultiplier += 0.5;
             } else {
-                typingSpeedMultiplier = 1; btn.innerHTML = "Speed: 1x";
+                typingSpeedMultiplier = 1;
             }
+            btn.innerHTML = "Speed: " + typingSpeedMultiplier + "x";
         }
 
         function showFinalPhoto() {
