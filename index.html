@@ -236,7 +236,6 @@
             object-fit: cover;
         }
 
-        /* NEW PLAY BUTTON STYLING */
         #manual-play-btn {
             position: absolute;
             top: 50%;
@@ -255,12 +254,6 @@
             z-index: 10001;
             box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
             border: 2px solid white;
-            transition: all 0.3s ease;
-        }
-
-        #manual-play-btn:hover {
-            transform: translate(-50%, -50%) scale(1.1);
-            background: #ff1493;
         }
 
         .final-text {
@@ -330,17 +323,30 @@
         let i = 0;
         let isTyping = false;
         let typingTimer;
+        let returnTimeout; // Restore timeout variable
 
         function resetAll() { location.reload(); }
 
         function moveBtn() {
             toast.classList.add('show-toast');
             setTimeout(() => toast.classList.remove('show-toast'), 800);
+            
+            clearTimeout(returnTimeout); // Clear existing timer
+            
             const maxX = box.clientWidth - noBtn.offsetWidth - 10;
             const maxY = box.clientHeight - noBtn.offsetHeight - 10;
             noBtn.style.left = Math.max(5, Math.random() * maxX) + 'px';
             noBtn.style.top = Math.max(5, Math.random() * maxY) + 'px';
             noBtn.style.transform = "none";
+            
+            returnTimeout = setTimeout(returnHome, 2000); // Reset timer for 2 seconds
+        }
+
+        // Restore snap-back function
+        function returnHome() {
+            noBtn.style.left = "calc(50% + 5px)";
+            noBtn.style.top = "50%";
+            noBtn.style.transform = "translateY(-50%)";
         }
 
         noBtn.addEventListener('mouseover', moveBtn);
@@ -415,19 +421,14 @@ Novio`;
 
         function showFinalPhoto() {
             document.getElementById('letter-page').style.display = 'none';
-            const finalPage = document.getElementById('final-photo-page');
-            finalPage.style.display = 'flex';
+            document.getElementById('final-photo-page').style.display = 'flex';
         }
 
-        // NEW FUNCTION: Handles manual playback for 100% success rate
         function startFinalVideo() {
             const video = document.getElementById('lastVideo');
             const playBtn = document.getElementById('manual-play-btn');
-            
             video.play().then(() => {
-                playBtn.style.display = 'none'; // Hide button once playing
-            }).catch(e => {
-                console.log("Still blocked - requires another tap.");
+                playBtn.style.display = 'none';
             });
         }
 
