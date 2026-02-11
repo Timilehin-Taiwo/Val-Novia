@@ -270,12 +270,12 @@
             <div id="skip-btn" onclick="skipTyping()">Skip >></div>
             <div id="speed-toggle" onclick="toggleSpeed()">Speed: 1x</div>
             <div id="letter-content"></div>
-            <button id="final-love-btn" class="surprise-btn" onclick="showFinalPhoto()">Love Forever →</button>
+            <button id="final-love-btn" class="surprise-btn" onclick="showFinalPhoto()">Love Forever? Yes!</button>
         </div>
     </div>
 
     <div id="final-photo-page">
-        <video id="lastVideo" class="final-media" loop playsinline preload="auto">
+        <video id="lastVideo" class="final-media" loop playsinline>
             <source src="couple-video.MP4" type="video/mp4">
         </video>
         <div class="final-text">Forever Yours. ❤️</div>
@@ -310,13 +310,6 @@
         function showVideo() {
             document.getElementById('video-overlay').style.display = 'flex';
             document.getElementById('mainVideo').play();
-            
-            // CRITICAL FIX: Prime the last video here!
-            // Browsers allow this play/pause "handshake" because it's during a real click event.
-            const lastVid = document.getElementById('lastVideo');
-            lastVid.play().then(() => {
-                lastVid.pause(); // We play it for a millisecond then pause it so it's "authorized" for later
-            }).catch(e => console.log("Priming last video..."));
         }
 
         function goBack() {
@@ -385,8 +378,14 @@ Novio`;
             document.getElementById('letter-page').style.display = 'none';
             const finalPage = document.getElementById('final-photo-page');
             const video = document.getElementById('lastVideo');
+            
             finalPage.style.display = 'flex';
-            video.play();
+            
+            // This click event provides the necessary "User Consent" 
+            // to allow the video and its audio to play immediately.
+            video.play().catch(e => {
+                console.log("Play triggered via consent click.");
+            });
         }
 
         function replayVideo() {
