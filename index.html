@@ -138,13 +138,13 @@
 
         video { width: 100%; max-width: 400px; border-radius: 20px; margin-bottom: 20px; }
         .overlay-controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        #whine-btn { background: white; color: #ff1493; border: 1px solid #ff1493; }
         #next-btn { background: #ff69b4; color: white; }
 
-        /* SCROLLABLE LETTER CONTAINER */
         .letter-container {
             width: 100%;
             max-width: 500px;
-            max-height: 80vh; /* Limits height on screen */
+            max-height: 80vh;
             background: #fffafa;
             padding: 60px 25px 30px; 
             border-radius: 20px;
@@ -153,7 +153,7 @@
             flex-direction: column;
             align-items: center;
             position: relative;
-            overflow-y: auto; /* Enables vertical scrolling */
+            overflow-y: auto;
             margin: auto;
         }
 
@@ -190,7 +190,7 @@
             background: #ff1493;
             color: white;
             box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
-            flex-shrink: 0; /* Prevents button from squishing */
+            flex-shrink: 0;
         }
 
         .fade-in-final {
@@ -203,7 +203,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* FINAL VIDEO PAGE */
         #final-photo-page {
             display: none;
             position: fixed;
@@ -261,6 +260,7 @@
         <h1 style="color: #ff1493; font-size: 1.5rem;">Wow!! She said Yes!! Again!! ❤️</h1>
         <video id="mainVideo" src="myvideo.mp4" playsinline controls></video>
         <div class="overlay-controls">
+            <button class="surprise-btn" id="whine-btn" onclick="goBack()">← You dey whine?</button>
             <button class="surprise-btn" id="next-btn" onclick="showLetter()">Next Surprise! 😊 →</button>
         </div>
     </div>
@@ -312,6 +312,11 @@
             document.getElementById('mainVideo').play();
         }
 
+        function goBack() {
+            document.getElementById('video-overlay').style.display = 'none';
+            document.getElementById('mainVideo').pause();
+        }
+
         const letterText = `Dear Novia,
 
 Cheers to our 8th valentines together and the first as my fiance, I chose to be more creative these past few months to show you just how special you are.
@@ -341,12 +346,8 @@ Novio`;
                 let char = letterText.charAt(i);
                 document.getElementById("letter-content").innerHTML += char;
                 i++;
-                
-                // Auto-scroll to bottom as it types
                 scrollBox.scrollTop = scrollBox.scrollHeight;
-
                 if (i > letterText.length * 0.85) document.getElementById('skip-btn').style.display = 'block';
-                
                 let delay = 85 / typingSpeedMultiplier; 
                 if (char === '.' || char === ',' || char === '!') delay = 450 / typingSpeedMultiplier; 
                 typingTimer = setTimeout(typeWriter, delay);
