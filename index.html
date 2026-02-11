@@ -15,7 +15,7 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden; /* Prevents scrollbars when button moves */
+            overflow: hidden;
             text-align: center;
         }
 
@@ -45,37 +45,41 @@
             object-fit: cover;
             border-radius: 15px;
             border: 3px solid #ff69b4;
+            background: #eee; /* Light gray box while loading */
         }
 
         .button-container {
             margin-top: 20px;
-            height: 120px;
+            height: 80px;
+            display: flex;
+            justify-content: center; /* Centers buttons horizontally */
+            align-items: center;
+            gap: 20px;
             position: relative;
         }
 
         button {
-            padding: 12px 30px;
+            padding: 12px 35px;
             font-size: 1.1rem;
             border-radius: 50px;
             border: none;
             cursor: pointer;
             font-weight: bold;
+            transition: all 0.3s ease-in-out; /* Smooth return transition */
         }
 
         #yes-btn {
             background: #ff69b4;
             color: white;
             box-shadow: 0 5px 15px rgba(255, 20, 147, 0.3);
+            z-index: 2;
         }
 
         #no-btn {
             background-color: #ffffff;
             color: #ff69b4;
             border: 2px solid #ff69b4;
-            position: absolute;
             z-index: 1000;
-            transition: all 0.15s ease-out;
-            left: 60%;
         }
 
         #video-overlay {
@@ -97,18 +101,18 @@
 </head>
 <body>
 
-    <div class="main-card">
+    <div class="main-card" id="proposal-card">
         <h1>Will you be my val, Novia? 🌸</h1>
         
         <div class="photo-gallery">
-            <img src="photo1.jpg"> 
-            <img src="photo2.jpg"> 
-            <img src="photo3.jpg">
+            <img src="photo1.jpg" onerror="console.error('Failed to load photo1.jpg')"> 
+            <img src="photo2.jpg" onerror="console.error('Failed to load photo2.jpg')"> 
+            <img src="photo3.jpg" onerror="console.error('Failed to load photo3.jpg')">
         </div>
 
         <div style="font-size: 30px; margin: 10px;">🍰 🎂 🧁</div>
 
-        <div class="button-container">
+        <div class="button-container" id="btn-parent">
             <button id="yes-btn" onclick="showVideo()">Yes!</button>
             <button id="no-btn">No</button>
         </div>
@@ -121,10 +125,11 @@
 
     <script>
         const noBtn = document.getElementById('no-btn');
+        let returnTimeout;
 
         function moveBtn() {
-            // Calculate random positions within the visible window
-            // We subtract button width/height so it doesn't go off edge
+            clearTimeout(returnTimeout); // Stop the return timer while she's chasing it
+            
             const maxX = window.innerWidth - noBtn.offsetWidth - 20;
             const maxY = window.innerHeight - noBtn.offsetHeight - 20;
             
@@ -134,19 +139,23 @@
             noBtn.style.position = 'fixed';
             noBtn.style.left = newX + 'px';
             noBtn.style.top = newY + 'px';
+
+            // Set timer to return after 2 seconds of inactivity
+            returnTimeout = setTimeout(returnToOriginal, 2000);
+        }
+
+        function returnToOriginal() {
+            noBtn.style.position = 'relative';
+            noBtn.style.left = '0';
+            noBtn.style.top = '0';
         }
 
         noBtn.addEventListener('mouseover', moveBtn);
-        noBtn.addEventListener('touchstart', (e) => { 
-            e.preventDefault(); 
-            moveBtn(); 
-        });
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveBtn(); });
 
         function showVideo() {
-            const overlay = document.getElementById('video-overlay');
-            const vid = document.getElementById('mainVideo');
-            overlay.style.display = 'flex';
-            vid.play();
+            document.getElementById('video-overlay').style.display = 'flex';
+            document.getElementById('mainVideo').play();
         }
     </script>
 </body>
