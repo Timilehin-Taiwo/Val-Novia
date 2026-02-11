@@ -1,785 +1,393 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>For Novia</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
-
     <style>
-
         * { box-sizing: border-box; }
 
-
-
         body {
-
             background-image: url('my_background.jpg'); 
-
             background-size: cover;
-
             background-position: center;
-
             background-attachment: fixed;
-
             font-family: 'Segoe UI', Arial, sans-serif;
-
             display: flex;
-
             flex-direction: column;
-
             align-items: center;
-
             justify-content: center;
-
             min-height: 100vh;
-
             margin: 0;
-
             overflow-x: hidden;
-
             text-align: center;
-
             padding: 20px;
-
         }
-
-
 
         .home-icon {
-
             position: fixed;
-
             top: 20px;
-
             left: 20px;
-
             font-size: 1.8rem;
-
             cursor: pointer;
-
             z-index: 20000;
-
             background: rgba(255, 255, 255, 0.7);
-
             padding: 8px;
-
             border-radius: 50%;
-
             line-height: 1;
-
             transition: transform 0.3s ease;
-
             text-decoration: none;
-
         }
-
         .home-icon:hover { transform: scale(1.2); }
 
-
-
         .main-card {
-
             background: rgba(255, 240, 245, 0.95); 
-
             backdrop-filter: blur(8px);
-
             padding: 25px;
-
             border-radius: 30px;
-
             box-shadow: 0 15px 35px rgba(255, 105, 180, 0.3);
-
             border: 2px solid #ffb6c1;
-
             width: 100%;
-
             max-width: 450px;
-
             position: relative;
-
             margin: auto;
-
         }
-
-
 
         h1 { color: #ff1493; font-size: 1.8rem; margin-top: 0; }
 
-
-
         .photo-gallery {
-
             display: flex;
-
             justify-content: space-between;
-
             gap: 8px;
-
             margin: 15px 0;
-
             width: 100%;
-
         }
-
-
 
         .photo-gallery img {
-
             width: 31%;
-
             aspect-ratio: 1/1;
-
             object-fit: cover;
-
             border-radius: 12px;
-
             border: 2px solid #ff69b4;
-
         }
-
-
 
         .button-area {
-
             margin-top: 10px;
-
             height: 140px; 
-
             position: relative;
-
             width: 100%;
-
             display: flex;
-
             justify-content: center;
-
             align-items: center;
-
         }
-
-
 
         button, .surprise-btn {
-
             padding: 12px 28px;
-
             font-size: 1rem;
-
             border-radius: 50px;
-
             border: none;
-
             cursor: pointer;
-
             font-weight: bold;
-
             transition: all 0.3s ease;
-
         }
-
-
 
         #yes-btn { background: #ff69b4; color: white; transform: translateX(-65px); z-index: 5; }
-
         #no-btn {
-
             background-color: #ffffff;
-
             color: #ff1493;
-
             border: 2px solid #ffb6c1;
-
             position: absolute;
-
             left: calc(50% + 5px);
-
             z-index: 10;
-
         }
-
-
 
         #dey-play-toast {
-
             position: absolute;
-
             top: 50%;
-
             left: 50%;
-
             transform: translate(-50%, -50%) scale(0);
-
             background: rgba(255, 20, 147, 0.8);
-
             color: white;
-
             padding: 10px 20px;
-
             border-radius: 20px;
-
             font-family: 'Dancing Script', cursive;
-
             font-size: 1.5rem;
-
             z-index: 100;
-
             pointer-events: none;
-
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-
             opacity: 0;
-
         }
-
-
 
         .show-toast {
-
             transform: translate(-50%, -50%) scale(1.2) !important;
-
             opacity: 1 !important;
-
         }
-
-
 
         .overlay {
-
             display: none;
-
             position: fixed;
-
             top: 0; left: 0; width: 100%; height: 100%;
-
             z-index: 9999;
-
             flex-direction: column;
-
             justify-content: center;
-
             align-items: center;
-
             padding: 20px;
-
             background: rgba(255, 228, 225, 0.95);
-
             overflow-y: auto;
-
         }
-
-
 
         video { width: 100%; max-width: 400px; border-radius: 20px; margin-bottom: 20px; }
-
         .overlay-controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-
         #whine-btn { background: white; color: #ff1493; border: 1px solid #ff1493; }
-
         #next-btn { background: #ff69b4; color: white; }
 
-
-
         .letter-container {
-
             width: 100%;
-
             max-width: 500px;
-
             background: #fffafa;
-
             padding: 40px 25px 30px; 
-
             border-radius: 20px;
-
             border: 1px solid #ffb6c1;
-
             display: flex;
-
             flex-direction: column;
-
             align-items: center;
-
             position: relative;
-
             margin: auto;
-
         }
-
-
 
         #speed-toggle {
-
             position: absolute;
-
             top: 12px;
-
             right: 12px;
-
             font-size: 0.75rem;
-
             color: #ff1493;
-
             background: rgba(255, 182, 193, 0.3);
-
             padding: 6px 12px;
-
             border-radius: 20px;
-
             cursor: pointer;
-
             border: 1px solid #ffb6c1;
-
             font-weight: bold;
-
             z-index: 500;
-
             white-space: nowrap;
-
         }
-
-
 
         #letter-content {
-
             font-family: 'Dancing Script', cursive;
-
             font-size: 1.3rem;
-
             color: #333;
-
             line-height: 1.5;
-
             text-align: left;
-
             white-space: pre-wrap;
-
             width: 100%;
-
         }
-
-
 
         #final-love-btn {
-
             opacity: 0;
-
             display: none;
-
             margin-top: 25px;
-
             background: #ff1493;
-
             color: white;
-
             box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
-
         }
-
-
 
         .fade-in-final {
-
             display: block !important;
-
             animation: finalFade 1.2s ease forwards;
-
         }
-
-
 
         @keyframes finalFade {
-
             from { opacity: 0; transform: translateY(15px); }
-
             to { opacity: 1; transform: translateY(0); }
-
         }
-
-
 
         #final-photo-page {
-
             display: none;
-
             position: fixed;
-
             top: 0; left: 0; width: 100%; height: 100%;
-
             z-index: 10000;
-
             background-image: url('my_background.jpg');
-
             background-size: cover;
-
             background-position: center;
-
             flex-direction: column;
-
             align-items: center;
-
             justify-content: flex-start;
-
             padding: 40px 20px;
-
             overflow-y: auto;
-
         }
-
-
 
         .final-media {
-
             width: auto;
-
             max-width: 90%;
-
             /* Specific 1080x1920 aspect ratio (9:16) */
-
             aspect-ratio: 9 / 16; 
-
             max-height: 70vh; /* Limits height so text stays visible below */
-
             border-radius: 20px;
-
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-
             border: 6px solid white;
-
             margin-top: 10px;
-
             background: black;
-
             object-fit: cover; /* Ensures video fills the frame */
-
         }
-
-
 
         .final-text {
-
             font-family: 'Dancing Script', cursive;
-
             color: #ff1493;
-
             font-size: 2.2rem;
-
             margin-top: 15px;
-
             text-shadow: 2px 2px white;
-
             padding-bottom: 20px;
-
         }
-
-
 
         @media (max-width: 380px) {
-
             #letter-content { font-size: 1.15rem; }
-
             .final-text { font-size: 1.8rem; }
-
             .final-media { max-height: 60vh; }
-
         }
-
     </style>
-
 </head>
-
 <body>
-
-
 
     <a href="#" class="home-icon" onclick="resetAll()">🏠</a>
 
-
-
     <div class="main-card" id="proposal-page">
-
         <h1>Will you be my val, Novia? 🌸</h1>
-
         <div id="dey-play-toast">Dey Play! 😂</div>
-
         <div class="photo-gallery">
-
             <img src="photo1.jpg"> 
-
             <img src="photo2.jpg"> 
-
             <img src="photo3.jpg">
-
         </div>
-
         <div style="font-size: 24px; margin: 10px;">🍰 🎂 🧁</div>
-
         <div class="button-area" id="box">
-
             <button id="yes-btn" onclick="showVideo()">Yes!</button>
-
             <button id="no-btn">No</button>
-
         </div>
-
     </div>
-
-
 
     <div id="video-overlay" class="overlay">
-
         <h1 style="color: #ff1493; font-size: 1.5rem;">Wow!! She said Yes!! Again!! ❤️</h1>
-
         <video id="mainVideo" src="myvideo.mp4" playsinline controls></video>
-
         <div class="overlay-controls">
-
             <button class="surprise-btn" id="whine-btn" onclick="goBack()">← You dey whine?</button>
-
             <button class="surprise-btn" id="next-btn" onclick="showLetter()">Next Surprise! 😊 →</button>
-
         </div>
-
     </div>
-
-
 
     <div id="letter-page" class="overlay">
-
         <div class="letter-container">
-
             <div id="speed-toggle" onclick="toggleSpeed()">Speed: 1x</div>
-
             <div id="letter-content"></div>
-
             <button id="final-love-btn" class="surprise-btn" onclick="showFinalPhoto()">Love Forever →</button>
-
         </div>
-
     </div>
-
-
 
     <div id="final-photo-page">
-
         <video id="lastVideo" class="final-media" loop playsinline>
-
             <source src="couple-video.mp4" type="video/mp4">
-
             Your browser does not support the video tag.
-
         </video>
-
         <div class="final-text">Forever Yours. ❤️</div>
-
     </div>
 
-
-
     <script>
-
         const noBtn = document.getElementById('no-btn');
-
         const box = document.getElementById('box');
-
         const toast = document.getElementById('dey-play-toast');
-
         let returnTimeout;
-
         let typingSpeedMultiplier = 1;
-
         let isTyping = false;
-
-
 
         function resetAll() { location.reload(); }
 
-
-
         function moveBtn() {
-
             toast.classList.add('show-toast');
-
             setTimeout(() => toast.classList.remove('show-toast'), 800);
-
             clearTimeout(returnTimeout);
-
             const maxX = box.clientWidth - noBtn.offsetWidth - 10;
-
             const maxY = box.clientHeight - noBtn.offsetHeight - 10;
-
             noBtn.style.left = Math.max(5, Math.random() * maxX) + 'px';
-
             noBtn.style.top = Math.max(5, Math.random() * maxY) + 'px';
-
             noBtn.style.transform = "none";
-
             returnTimeout = setTimeout(returnHome, 2000);
-
         }
-
-
 
         function returnHome() {
-
             noBtn.style.left = "calc(50% + 5px)";
-
             noBtn.style.top = "50%";
-
             noBtn.style.transform = "translateY(-50%)";
-
         }
-
-
 
         noBtn.addEventListener('mouseover', moveBtn);
-
         noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveBtn(); });
 
-
-
         function showVideo() {
-
             document.getElementById('video-overlay').style.display = 'flex';
-
             document.getElementById('mainVideo').play();
-
         }
-
-
 
         function goBack() {
-
             document.getElementById('video-overlay').style.display = 'none';
-
             document.getElementById('mainVideo').pause();
-
         }
-
-
 
         const letterText = `Dear Novia,
 
-
-
 Cheers to our 8th valentines together and the first as my fiance, I chose to be more creative these past few months to show you just how special you are.
-
-
 
 Over these 8 years, I have called you different names, Ebube, Querida, Bambina, Tesoro Mio, Vauva and now Novia but through all of these it was all the same. 
 
-
-
 The Love I have for you remains the same today as it has always been.
-
-
 
 Right now, I just want to show you more and more of how endless my love for you is and to show you that I set the bar and it definitely would keep going higher!
 
-
-
 To many more valentines days in Love.
 
-
-
 Your Fiance, 
-
 Novio`;
 
-
-
         function showLetter() {
-
             document.getElementById('video-overlay').style.display = 'none';
-
             document.getElementById('letter-page').style.display = 'flex';
-
             if (!isTyping) {
-
                 isTyping = true;
-
                 typeWriter();
-
             }
-
         }
-
-
 
         let i = 0;
-
         function typeWriter() {
-
             if (i < letterText.length) {
-
                 let char = letterText.charAt(i);
-
                 document.getElementById("letter-content").innerHTML += char;
-
                 i++;
-
                 let delay = 85 / typingSpeedMultiplier; 
-
                 if (char === '.' || char === ',' || char === '!') delay = 450 / typingSpeedMultiplier; 
-
                 setTimeout(typeWriter, delay);
-
             } else {
-
                 const finalBtn = document.getElementById('final-love-btn');
-
                 finalBtn.classList.add('fade-in-final');
-
                 document.getElementById('speed-toggle').style.display = 'none';
-
             }
-
         }
-
-
 
         function toggleSpeed() {
-
             const btn = document.getElementById('speed-toggle');
-
             if (typingSpeedMultiplier < 5) {
-
                 typingSpeedMultiplier += 0.5;
-
             } else {
-
                 typingSpeedMultiplier = 1;
-
             }
-
             btn.innerHTML = "Speed: " + typingSpeedMultiplier + "x";
-
         }
-
-
 
         function showFinalPhoto() {
-
             document.getElementById('letter-page').style.display = 'none';
-
             const finalPage = document.getElementById('final-photo-page');
-
             const video = document.getElementById('lastVideo');
-
             finalPage.style.display = 'flex';
-
             video.play().catch(error => { console.log("Audio requires interaction"); });
-
         }
-
     </script>
-
 </body>
-
 </html>
