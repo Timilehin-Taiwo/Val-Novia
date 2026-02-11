@@ -203,7 +203,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* UPDATED: Scrollable Final Page */
         #final-photo-page {
             display: none;
             position: fixed;
@@ -214,21 +213,54 @@
             background-position: center;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Changed to flex-start for scrolling */
+            justify-content: flex-start;
             padding: 40px 20px;
-            overflow-y: auto; /* Enable scrolling */
+            overflow-y: auto;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            aspect-ratio: 9 / 16;
+            flex-shrink: 0;
         }
 
         .final-media {
             width: 100%;
-            max-width: 380px;
-            aspect-ratio: 9 / 16; 
+            height: 100%;
             border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             border: 6px solid white;
             background: black;
             object-fit: cover;
-            flex-shrink: 0;
+        }
+
+        /* NEW PLAY BUTTON STYLING */
+        #manual-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 20, 147, 0.9);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 10001;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+            border: 2px solid white;
+            transition: all 0.3s ease;
+        }
+
+        #manual-play-btn:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: #ff1493;
         }
 
         .final-text {
@@ -279,9 +311,12 @@
     </div>
 
     <div id="final-photo-page">
-        <video id="lastVideo" class="final-media" loop playsinline>
-            <source src="couple-video.MP4" type="video/mp4">
-        </video>
+        <div class="video-container">
+            <div id="manual-play-btn" onclick="startFinalVideo()">▶</div>
+            <video id="lastVideo" class="final-media" loop playsinline>
+                <source src="couple-video.MP4" type="video/mp4">
+            </video>
+        </div>
         <div class="final-text">Forever Yours. ❤️</div>
         <button class="surprise-btn" onclick="replayVideo()" style="background: white; color: #ff1493; border: 1px solid #ff1493; margin-top: 10px; flex-shrink: 0; margin-bottom: 20px;">Replay ↺</button>
     </div>
@@ -351,12 +386,7 @@ Novio`;
                 document.getElementById("letter-content").innerHTML += char;
                 i++;
                 scrollBox.scrollTop = scrollBox.scrollHeight;
-                
-                // FIXED: Show skip button after 20% of text
-                if (i > letterText.length * 0.20) {
-                    document.getElementById('skip-btn').style.display = 'block';
-                }
-                
+                if (i > letterText.length * 0.20) document.getElementById('skip-btn').style.display = 'block';
                 let delay = 85 / typingSpeedMultiplier; 
                 if (char === '.' || char === ',' || char === '!') delay = 450 / typingSpeedMultiplier; 
                 typingTimer = setTimeout(typeWriter, delay);
@@ -386,15 +416,26 @@ Novio`;
         function showFinalPhoto() {
             document.getElementById('letter-page').style.display = 'none';
             const finalPage = document.getElementById('final-photo-page');
-            const video = document.getElementById('lastVideo');
             finalPage.style.display = 'flex';
-            video.play().catch(e => console.log("Consent playback triggered."));
+        }
+
+        // NEW FUNCTION: Handles manual playback for 100% success rate
+        function startFinalVideo() {
+            const video = document.getElementById('lastVideo');
+            const playBtn = document.getElementById('manual-play-btn');
+            
+            video.play().then(() => {
+                playBtn.style.display = 'none'; // Hide button once playing
+            }).catch(e => {
+                console.log("Still blocked - requires another tap.");
+            });
         }
 
         function replayVideo() {
             const video = document.getElementById('lastVideo');
             video.currentTime = 0;
             video.play();
+            document.getElementById('manual-play-btn').style.display = 'none';
         }
     </script>
 </body>
