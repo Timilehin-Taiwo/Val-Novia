@@ -140,6 +140,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+        }
+
+        /* Speed Control Styling */
+        #speed-toggle {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.8rem;
+            color: #ff1493;
+            background: rgba(255, 182, 193, 0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            border: 1px solid #ffb6c1;
+            font-weight: bold;
         }
 
         #letter-content {
@@ -150,6 +166,7 @@
             text-align: left;
             white-space: pre-wrap;
             width: 100%;
+            margin-top: 10px;
         }
 
         #final-love-btn {
@@ -165,18 +182,16 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Final Screen */
         #final-photo-page {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10000;
-            background: #fffafa;
+            background-image: url('my_background.jpg');
+            background-size: cover;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-image: url('my_background.jpg');
-            background-size: cover;
         }
 
         #couple-img {
@@ -224,6 +239,7 @@
 
     <div id="letter-page" class="overlay">
         <div class="letter-container">
+            <div id="speed-toggle" onclick="toggleSpeed()">Speed: 1x</div>
             <div id="letter-content"></div>
             <button id="final-love-btn" class="surprise-btn" onclick="showFinalPhoto()">With Love →</button>
         </div>
@@ -239,6 +255,7 @@
         const box = document.getElementById('box');
         const toast = document.getElementById('dey-play-toast');
         let returnTimeout;
+        let typingSpeedMultiplier = 1;
 
         function moveBtn() {
             showToast();
@@ -302,12 +319,33 @@ Novio`;
                 let char = letterText.charAt(i);
                 document.getElementById("letter-content").innerHTML += char;
                 i++;
-                let delay = 85; 
-                if (char === '.' || char === ',' || char === '!') delay = 450; 
+                
+                // Base delay divided by multiplier
+                let delay = 85 / typingSpeedMultiplier; 
+                
+                // Sentence pauses also scale with speed
+                if (char === '.' || char === ',' || char === '!') {
+                    delay = 450 / typingSpeedMultiplier; 
+                }
+                
                 setTimeout(typeWriter, delay);
             } else {
-                // Show final button after typing finishes
                 document.getElementById('final-love-btn').style.display = 'block';
+                document.getElementById('speed-toggle').style.display = 'none'; // Hide speed when done
+            }
+        }
+
+        function toggleSpeed() {
+            const btn = document.getElementById('speed-toggle');
+            if (typingSpeedMultiplier === 1) {
+                typingSpeedMultiplier = 1.5;
+                btn.innerHTML = "Speed: 1.5x";
+            } else if (typingSpeedMultiplier === 1.5) {
+                typingSpeedMultiplier = 2;
+                btn.innerHTML = "Speed: 2x";
+            } else {
+                typingSpeedMultiplier = 1;
+                btn.innerHTML = "Speed: 1x";
             }
         }
 
