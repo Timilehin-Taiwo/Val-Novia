@@ -14,11 +14,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            /* Changed 'justify-content' to allow scrolling */
+            justify-content: flex-start; 
             min-height: 100vh;
             margin: 0;
-            overflow: hidden;
+            /* Changed 'overflow' to allow vertical scrolling */
+            overflow-x: hidden;
+            overflow-y: auto; 
             text-align: center;
+            padding: 20px 0; /* Adds space when scrolling */
         }
 
         .main-card {
@@ -31,7 +35,9 @@
             width: 90%;
             max-width: 500px;
             z-index: 1;
-            position: relative; /* Crucial for keeping the No button inside */
+            position: relative;
+            /* Ensures card stays centered even when scrollable */
+            margin: auto; 
         }
 
         h1 { color: #ff1493; font-size: 2rem; margin-bottom: 20px; }
@@ -51,14 +57,14 @@
             border: 3px solid #ff69b4;
         }
 
-        .button-container {
+        .button-area {
             margin-top: 20px;
-            height: 150px; /* Increased height to give the No button room to run */
-            display: flex;
-            justify-content: center; 
-            align-items: center;
-            gap: 20px;
+            height: 160px; 
             position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         button {
@@ -75,15 +81,18 @@
             background: #ff69b4;
             color: white;
             box-shadow: 0 5px 15px rgba(255, 20, 147, 0.3);
-            z-index: 2;
+            transform: translateX(-75px); 
         }
 
         #no-btn {
             background-color: #ffffff;
             color: #ff1493;
             border: 2px solid #ff69b4;
-            position: absolute; /* Changed to absolute to stay inside the container */
+            position: absolute;
             z-index: 1000;
+            left: calc(50% + 5px); 
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         #video-overlay {
@@ -97,12 +106,12 @@
             align-items: center;
         }
 
-        video { width: 90%; max-height: 70%; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        video { width: 90%; max-height: 70%; border-radius: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="main-card" id="card">
+    <div class="main-card">
         <h1>Will you be my val, Novia? 🌸</h1>
         
         <div class="photo-gallery">
@@ -113,48 +122,43 @@
 
         <div style="font-size: 30px; margin: 10px;">🍰 🎂 🧁</div>
 
-        <div class="button-container" id="container">
+        <div class="button-area" id="box">
             <button id="yes-btn" onclick="showVideo()">Yes!</button>
             <button id="no-btn">No</button>
         </div>
     </div>
 
     <div id="video-overlay">
-        <h1 style="color: #ff1493; text-shadow: 1px 1px white;">I Love You Forever! ❤️</h1>
-        <video id="mainVideo" src="myvideo.mp4" playsinline></video>
+        <h1 style="color: #ff1493;">I Love You Forever! ❤️</h1>
+        <video id="mainVideo" src="myvideo.mp4" playsinline controls></video>
     </div>
 
     <script>
         const noBtn = document.getElementById('no-btn');
-        const container = document.getElementById('container');
+        const box = document.getElementById('box');
         let returnTimeout;
-
-        // The No button starts centered next to Yes
-        noBtn.style.left = "calc(50% + 10px)"; 
 
         function moveBtn() {
             clearTimeout(returnTimeout);
             
-            // Get boundaries of the button container (inside the pink card)
-            const padding = 10;
-            const maxX = container.clientWidth - noBtn.offsetWidth - padding;
-            const maxY = container.clientHeight - noBtn.offsetHeight - padding;
+            const padding = 20;
+            const maxX = box.clientWidth - noBtn.offsetWidth - padding;
+            const maxY = box.clientHeight - noBtn.offsetHeight - padding;
             
-            // Generate coordinates within that box
             const newX = Math.random() * maxX;
             const newY = Math.random() * maxY;
 
             noBtn.style.left = newX + 'px';
             noBtn.style.top = newY + 'px';
+            noBtn.style.transform = "none";
 
-            // Return home after 2 seconds
             returnTimeout = setTimeout(returnHome, 2000);
         }
 
         function returnHome() {
-            noBtn.style.left = "calc(50% + 10px)";
+            noBtn.style.left = "calc(50% + 5px)";
             noBtn.style.top = "50%";
-            noBtn.style.transform = "translate(0, -50%)";
+            noBtn.style.transform = "translateY(-50%)";
         }
 
         noBtn.addEventListener('mouseover', moveBtn);
