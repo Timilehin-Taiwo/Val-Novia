@@ -203,49 +203,65 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* FULL SCREEN MOBILE SLIDESHOW */
         #final-photo-page {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10000;
-            background-image: url('my_background.jpg');
-            background-size: cover;
-            background-position: center;
+            background: black;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            overflow-y: auto;
+            overflow: hidden;
         }
 
         .image-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            max-height: 70vh;
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .final-media-img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: auto;
-            max-height: 70vh;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-            border: 6px solid white;
-            object-fit: contain;
-            background: #fff;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease-in-out; /* Smooth 1s fade */
+        }
+
+        .final-media-img.active {
+            opacity: 1;
         }
 
         .final-text {
+            position: relative;
+            z-index: 10001;
             font-family: 'Dancing Script', cursive;
-            color: #ff1493;
-            font-size: 2.2rem;
-            margin-top: 15px;
-            text-shadow: 2px 2px white;
-            flex-shrink: 0;
+            color: white;
+            font-size: 3.5rem;
+            text-shadow: 2px 2px 15px rgba(0, 0, 0, 1), 0 0 25px rgba(255, 20, 147, 0.8);
+            margin: 0;
+            padding: 20px;
+            pointer-events: none;
+        }
+
+        /* Desktop Adjustment */
+        @media (min-width: 1024px) {
+            .image-container {
+                width: 100%;
+                height: 100%;
+            }
+            .final-media-img {
+                object-fit: contain; /* Keeps photos from cropping on wide screens */
+                background: #000;
+            }
         }
     </style>
 </head>
@@ -287,12 +303,15 @@
     </div>
 
     <div id="final-photo-page">
-        <div class="image-container">
-            <img src="final_photo.jpg" class="final-media-img" alt="Our Memory">
+        <div class="image-container" id="slideshow">
+            <img src="final_photo1.jpg" class="final-media-img active">
+            <img src="final_photo2.jpg" class="final-media-img">
+            <img src="final_photo3.jpg" class="final-media-img">
+            <img src="final_photo4.jpg" class="final-media-img">
+            <img src="final_photo5.jpg" class="final-media-img">
             <audio id="lastAudio" src="myaudio.mp3" loop></audio>
         </div>
         <div class="final-text">Forever Yours. ❤️</div>
-        <button class="surprise-btn" onclick="replayAudio()" style="background: white; color: #ff1493; border: 1px solid #ff1493; margin-top: 10px; flex-shrink: 0; margin-bottom: 20px;">Replay Audio ↺</button>
     </div>
 
     <script>
@@ -396,20 +415,23 @@ Novio`;
             document.getElementById('speed-toggle').innerHTML = "Speed: " + typingSpeedMultiplier + "x";
         }
 
+        let currentSlide = 0;
+        const slides = document.getElementsByClassName('final-media-img');
+
+        function startSlideshow() {
+            setInterval(() => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, 3000); // Shuffling every 3 seconds
+        }
+
         function showFinalPhoto() {
             document.getElementById('letter-page').style.display = 'none';
             document.getElementById('final-photo-page').style.display = 'flex';
-            // TRIGGER AUTOPLAY HERE
             const audio = document.getElementById('lastAudio');
-            audio.play().catch(error => {
-                console.log("Autoplay blocked, but user interaction should prevent this.");
-            });
-        }
-
-        function replayAudio() {
-            const audio = document.getElementById('lastAudio');
-            audio.currentTime = 0;
-            audio.play();
+            audio.play().catch(e => console.log("Autoplay handled"));
+            startSlideshow();
         }
     </script>
 </body>
